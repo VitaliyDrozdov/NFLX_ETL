@@ -1,0 +1,8 @@
+Исходные_файлы/
+файлы (1).zip
+.vscode/
+.venv/
+venv/
+__pycache__/
+*.log
+.idea
