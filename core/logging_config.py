@@ -14,3 +14,6 @@ def setup_logging():
     ch.setFormatter(formatter)
     logger.addHandler(ch)
     return logger
+
+
+logger = setup_logging()
