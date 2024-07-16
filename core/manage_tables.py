@@ -113,3 +113,19 @@ def create_tables(engine):
     except Exception as err:
         logger.error(f"Ошибка при создании таблиц: {err}")
     return Base.metadata, metadata
+
+
+def drop_table_if_exists(engine, table_name, schema=SCHEMA):
+    try:
+        metadata.reflect(bind=engine, schema=schema)
+        logger.info(f"Удаление существующей таблицы: {table_name}")
+        table = Table(
+            table_name,
+            metadata,
+            autoload_with=engine,
+            schema=schema,
+        )
+        table.drop(bind=engine)
+        logger.info(f"Таблица '{table_name}' удалена.")
+    except Exception as err:
+        logger.error(f"\nОшибка при удалении таблицы: {err}\n")

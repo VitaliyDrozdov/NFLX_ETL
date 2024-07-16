@@ -14,7 +14,7 @@ repos:
     - id: black
       exclude: ^tests/
       args:
-      - --line-length=80
+      - --line-length=79
 
 - repo: https://github.com/PyCQA/isort
   rev: 5.13.2
