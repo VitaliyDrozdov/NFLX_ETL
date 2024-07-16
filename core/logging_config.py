@@ -9,10 +9,15 @@ def setup_logging():
     ch = logging.StreamHandler(stream=sys.stdout)
     ch.setLevel(logging.INFO)
     formatter = logging.Formatter(
-        "%(asctime)s - %(name)s -  func(%(funcName)s)- [%(levelname)s] - %(message)s"
+        "%(asctime)s - %(name)s - func(%(funcName)s)- [%(levelname)s] - %(message)s"
     )
     ch.setFormatter(formatter)
     logger.addHandler(ch)
+
+    fh = logging.FileHandler("log.log", mode="w")
+    fh.setLevel(logging.INFO)
+    fh.setFormatter(formatter)
+    logger.addHandler(fh)
     return logger
 
 
