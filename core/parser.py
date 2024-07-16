@@ -14,8 +14,7 @@ def read_data(file_path, encoding="utf-8", delimiter=";"):
             delimiter=delimiter,
             encoding=encoding,
         )
-        logger.info("Данные получены.")
-        # logger.info(f"\n{data}")
+        # logger.info("Данные получены.")
         return data
     except Exception as err:
         logger.error(f"Ошибка при чтении данных из: {file_path}; {err}")
@@ -32,15 +31,15 @@ def clean_data(data):
 def load_to_db(data, table_name, engine):
     try:
         inspector = inspect(engine)
-        logger.info(f"Загрузка данных в таблицу: {table_name}.")
+        # logger.info(f"Загрузка данных в таблицу: {table_name}.")
         columns_in_db = [
             column["name"]
             for column in inspector.get_columns(table_name, schema=SCHEMA)
         ]
-        logger.info(f"Колонки в БД: {columns_in_db}")
+        # logger.info(f"Колонки в БД: {columns_in_db}")
         data_columns = [col for col in data.columns if col in columns_in_db]
         cleaned_data = clean_data(data[data_columns])
-        logger.info(f"Cleaned data:\n {cleaned_data.dtypes}")
+        # logger.info(f"Cleaned data:\n {cleaned_data.dtypes}")
 
         cleaned_data.to_sql(
             table_name,
@@ -49,7 +48,7 @@ def load_to_db(data, table_name, engine):
             if_exists="append",
             index=False,
         )
-        logger.info("Данные загружены.")
+        # logger.info("Данные загружены.")
     except Exception as err:
         logger.error(
             (f"\nОшибка при загрузке данных в таблицу {table_name}: {err}\n")

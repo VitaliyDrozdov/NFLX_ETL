@@ -1,6 +1,10 @@
 import logging
 import sys
 
+from sqlalchemy.orm import sessionmaker
+
+from .db_config import engine
+
 
 def setup_logging():
     """ "Настройки логирования."""
@@ -22,3 +26,27 @@ def setup_logging():
 
 
 logger = setup_logging()
+
+
+def log_to_db(table_name, start_time, end_time):
+    try:
+        from .manage_tables import ETLLog
+
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        duration = end_time - start_time
+        log_entry = ETLLog(
+            table_name=table_name,
+            start_time=start_time,
+            end_time=end_time,
+            duration=duration,
+        )
+        session.add(log_entry)
+        session.commit()
+
+    except Exception as err:
+        logger.error(
+            f"Ошибка при записи лога для таблицы '{table_name}': {err}"
+        )
+    finally:
+        session.close()
