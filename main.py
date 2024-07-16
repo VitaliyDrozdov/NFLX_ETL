@@ -18,14 +18,30 @@ ENGINE_PATH = (
     f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
 
+pk_mapping = {
+    "ft_balance_f.csv": ["ON_DATE", "ACCOUNT_RK"],
+    "ft_posting_f.csv": [],
+    "md_account_d.csv": ["DATA_ACTUAL_DATE", "ACCOUNT_RK"],
+    "md_currency_d.csv": ["CURRENCY_RK", "DATA_ACTUAL_DATE"],
+    "md_exchange_rate_d.csv": ["DATA_ACTUAL_DATE", "CURRENCY_RK"],
+    "md_ledger_account_s.csv": ["LEDGER_ACCOUNT", "START_DATE"],
+}
+
 
 def main(file_paths):
+    """Основной ETL процесс."""
     engine = create_engine(ENGINE_PATH)
     for filename in file_paths:
         filepath = os.path.join(CSVPATH, filename)
-        data = read_data(filepath)
+        encoding = "utf-8"
+        # для этого файла стандартная utf-8 не подходит
+        if "md_currency_d.csv" in filename:
+            encoding = "cp1252"
+        data = read_data(filepath, encoding=encoding)
+    for filename in file_paths:
         table_name = filename.split(".")[0]
-        load_to_db(data, table_name, engine)
+        pk = pk_mapping.get(filename, [])
+        load_to_db(data, table_name, engine, pk=pk)
 
 
 if __name__ == "__main__":
