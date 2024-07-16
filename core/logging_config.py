@@ -2,8 +2,8 @@ import logging
 import sys
 
 
-# Настройки логирования.
 def setup_logging():
+    """ "Настройки логирования."""
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     ch = logging.StreamHandler(stream=sys.stdout)
