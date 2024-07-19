@@ -1,6 +1,6 @@
 import pandas as pd
 
-from .db_config import SCHEMA, engine
+from .db_config import SCHEMA
 from .logging_config import logger
 
 
@@ -18,19 +18,24 @@ def read_data(file_path, encoding="utf-8", delimiter=";"):
         logger.error(f"Ошибка при чтении данных из: {file_path}; {err}")
 
 
-def clean_data(data):
-    data.dropna(how="any", inplace=True)
+def clean_data(data, dropna):
+    if dropna:
+        data.dropna(how="any", inplace=True)
     data.drop_duplicates(inplace=True)
     data.columns = data.columns.str.lower()
-    for col in data.columns:
-        if col == "currency_code":
-            data["currency_code"] = data["currency_code"].astype(str).str[:3]
+    if "currency_code" in data.columns:
+        data["currency_code"] = data["currency_code"].astype(str).str[:3]
     return data
 
 
-def load_to_db(data, table_name, engine):
+def load_to_db(
+    data, table_name, engine, schema=SCHEMA, clean=True, dropna=True
+):
     try:
-        cleaned_data = clean_data(data)
+        if clean:
+            cleaned_data = clean_data(data, dropna=dropna)
+        else:
+            cleaned_data = data
 
         cleaned_data.to_sql(
             table_name,
@@ -39,7 +44,7 @@ def load_to_db(data, table_name, engine):
             if_exists="append",
             index=False,
         )
-        # logger.info("Данные загружены.")
+        logger.info("Данные загружены в БД.")
 
     except Exception as err:
         logger.error(
@@ -47,13 +52,15 @@ def load_to_db(data, table_name, engine):
         )
 
 
-def export_f101_to_csv(csv_path):
-    sql_query = """
-        SELECT * FROM "DM".f101_round_f
-    """
+def export_to_csv(table_name, csv_path, engine, schema="DM"):
+    sql_query = f'SELECT * FROM "{schema}".{table_name}'
     try:
         df = pd.read_sql_query(sql_query, engine)
         df.to_csv(csv_path, index=False, encoding="utf-8-sig", sep=";")
-        logger.info(f"Данные экспортированы в CSV файл: {csv_path}")
+        logger.info(
+            f"Данные из '{table_name}' экспортированы в CSV: {csv_path}"
+        )
     except Exception as e:
-        logger.error(f"Ошибка при экспорте данных в CSV: {e}")
+        logger.error(
+            f"Ошибка при экспорте данных из таблицы '{table_name}' в CSV: {e}"
+        )

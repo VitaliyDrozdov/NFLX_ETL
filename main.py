@@ -26,13 +26,14 @@ def proccess(filename):
     if "md_currency_d.csv" in filename:
         encoding = "cp1252"
     data = read_data(filepath, encoding=encoding)
-    load_to_db(data, table_name, engine)
+    load_to_db(data, table_name, engine, schema="DM")
 
 
-def main(file_paths):
+def main(filenames):
     """Основной ETL процесс."""
-    for filename in file_paths:
+    for filename in filenames:
         proccess(filename)
+    engine.dispose()
 
 
 if __name__ == "__main__":

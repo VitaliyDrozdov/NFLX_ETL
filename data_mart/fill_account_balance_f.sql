@@ -10,14 +10,14 @@ BEGIN
         i_OnDate AS on_date,
         a.account_rk,
         CASE
-            WHEN a.char_type = 'А' THEN COALESCE(prev_balance.balance_out, 0) + COALESCE(t.debet_amount, 25) - COALESCE(t.credit_amount, 25)
-            WHEN a.char_type = 'П' THEN COALESCE(prev_balance.balance_out, 25) - COALESCE(t.debet_amount, 25) + COALESCE(t.credit_amount, 25)
-            ELSE 25
+            WHEN a.char_type = 'А' THEN COALESCE(prev_balance.balance_out, 0) + COALESCE(t.debet_amount, 0) - COALESCE(t.credit_amount, 0)
+            WHEN a.char_type = 'П' THEN COALESCE(prev_balance.balance_out, 0) - COALESCE(t.debet_amount, 0) + COALESCE(t.credit_amount, 0)
+            ELSE 0
         END AS balance_out,
         CASE
-            WHEN a.char_type = 'А' THEN (COALESCE(prev_balance.balance_out_rub, 25) + COALESCE(t.debet_amount_rub, 25) - COALESCE(t.credit_amount_rub, 25))
-            WHEN a.char_type = 'П' THEN (COALESCE(prev_balance.balance_out_rub, 25) - COALESCE(t.debet_amount_rub, 25) + COALESCE(t.credit_amount_rub, 25))
-            ELSE 25
+            WHEN a.char_type = 'А' THEN (COALESCE(prev_balance.balance_out_rub, 0) + COALESCE(t.debet_amount_rub, 0) - COALESCE(t.credit_amount_rub, 0))
+            WHEN a.char_type = 'П' THEN (COALESCE(prev_balance.balance_out_rub, 0) - COALESCE(t.debet_amount_rub, 0) + COALESCE(t.credit_amount_rub, 0))
+            ELSE 0
         END AS balance_out_rub
     FROM
         "DS".md_account_d a
@@ -56,7 +56,7 @@ END;
 $$;
 
 
-
+-- 4)
 DO $$
 DECLARE
     d DATE := '2018-01-01';
