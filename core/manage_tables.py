@@ -23,20 +23,20 @@ metadata = MetaData()
 class FT_BALANCE_F(Base):
     __table_args__ = {"schema": SCHEMA}
     __tablename__ = "ft_balance_f"
-    ON_DATE = Column(Date, primary_key=True, nullable=False)
-    ACCOUNT_RK = Column(Numeric, primary_key=True, nullable=False)
-    CURRENCY_RK = Column(Numeric)
-    BALANCE_OUT = Column(Float)
+    on_date = Column(Date, primary_key=True, nullable=False)
+    account_rk = Column(Numeric, primary_key=True, nullable=False)
+    currency_rk = Column(Numeric)
+    balance_out = Column(Float)
 
 
 FT_POSTING_F = Table(
     "ft_posting_f",
     metadata,
-    Column("OPER_DATE", Date, nullable=False),
-    Column("CREDIT_ACCOUNT_RK", Numeric, nullable=False),
-    Column("DEBET_ACCOUNT_RK", Numeric, nullable=False),
-    Column("CREDIT_AMOUNT", Float),
-    Column("DEBET_AMOUNT", Float),
+    Column("oper_date", Date, nullable=False),
+    Column("credit_account_rk", Numeric, nullable=False),
+    Column("debet_account_rk", Numeric, nullable=False),
+    Column("credit_amount", Float),
+    Column("debet_amount", Float),
     schema=SCHEMA,
 )
 
@@ -44,66 +44,66 @@ FT_POSTING_F = Table(
 class MD_ACCOUNT_D(Base):
     __table_args__ = {"schema": SCHEMA}
     __tablename__ = "md_account_d"
-    DATA_ACTUAL_DATE = Column(Date, primary_key=True, nullable=False)
-    DATA_ACTUAL_END_DATE = Column(Date, nullable=False)
-    ACCOUNT_RK = Column(Numeric, primary_key=True, nullable=False)
-    ACCOUNT_NUMBER = Column(String(20), nullable=False)
-    CHAR_TYPE = Column(CHAR(1), nullable=False)
-    CURRENCY_RK = Column(Numeric, nullable=False)
-    CURRENCY_CODE = Column(String(3), nullable=False)
+    data_actual_date = Column(Date, primary_key=True, nullable=False)
+    data_actual_end_date = Column(Date, nullable=False)
+    account_rk = Column(Numeric, primary_key=True, nullable=False)
+    account_number = Column(String(20), nullable=False)
+    char_type = Column(CHAR(1), nullable=False)
+    currency_rk = Column(Numeric, nullable=False)
+    currency_code = Column(String(3), nullable=False)
 
 
 class MD_CURRENCY_D(Base):
     __table_args__ = {"schema": SCHEMA}
     __tablename__ = "md_currency_d"
-    CURRENCY_RK = Column(Numeric, primary_key=True, nullable=False)
-    DATA_ACTUAL_DATE = Column(Date, primary_key=True, nullable=False)
-    DATA_ACTUAL_END_DATE = Column(Date)
-    CURRENCY_CODE = Column(String(3))
-    CODE_ISO_CHAR = Column(String(3))
+    currency_rk = Column(Numeric, primary_key=True, nullable=False)
+    data_actual_date = Column(Date, primary_key=True, nullable=False)
+    data_actual_end_date = Column(Date)
+    currency_code = Column(String(3))
+    code_iso_char = Column(String(3))
 
 
 class MD_EXCHANGE_RATE_D(Base):
     __table_args__ = {"schema": SCHEMA}
     __tablename__ = "md_exchange_rate_d"
-    DATA_ACTUAL_DATE = Column(Date, primary_key=True, nullable=False)
-    DATA_ACTUAL_END_DATE = Column(Date)
-    CURRENCY_RK = Column(Numeric, primary_key=True, nullable=False)
-    REDUCED_COURCE = Column(Float)
-    CODE_ISO_NUM = Column(String(3))
+    data_actual_date = Column(Date, primary_key=True, nullable=False)
+    data_actual_end_date = Column(Date)
+    currency_rk = Column(Numeric, primary_key=True, nullable=False)
+    reduced_cource = Column(Float)
+    code_iso_num = Column(String(3))
 
 
 class MD_LEDGER_ACCOUNT_S(Base):
     __table_args__ = {"schema": SCHEMA}
     __tablename__ = "md_ledger_account_s"
-    LEDGER_ACCOUNT = Column(Integer, primary_key=True, nullable=False)
-    START_DATE = Column(Date, primary_key=True, nullable=False)
-    CHAPTER = Column(CHAR(1))
-    CHAPTER_NAME = Column(String(16))
-    SECTION_NUMBER = Column(Integer)
-    SECTION_NAME = Column(String(22))
-    SUBSECTION_NAME = Column(String(21))
-    LEDGER1_ACCOUNT = Column(Integer)
-    LEDGER1_ACCOUNT_NAME = Column(String(47))
-    LEDGER_ACCOUNT_NAME = Column(String(153))
-    CHARACTERISTIC = Column(CHAR(1))
-    IS_RESIDENT = Column(Integer)
-    IS_RESERVE = Column(Integer)
-    IS_RESERVED = Column(Integer)
-    IS_LOAN = Column(Integer)
-    IS_RESERVED_ASSETS = Column(Integer)
-    IS_OVERDUE = Column(Integer)
-    IS_INTEREST = Column(Integer)
-    PAIR_ACCOUNT = Column(String(5))
-    END_DATE = Column(Date)
-    IS_RUB_ONLY = Column(Integer)
-    MIN_TERM = Column(CHAR(1))
-    MIN_TERM_MEASURE = Column(CHAR(1))
-    MAX_TERM = Column(CHAR(1))
-    MAX_TERM_MEASURE = Column(CHAR(1))
-    LEDGER_ACC_FULL_NAME_TRANSLIT = Column(CHAR(1))
-    IS_REVALUATION = Column(CHAR(1))
-    IS_CORRECT = Column(CHAR(1))
+    ledger_account = Column(Integer, primary_key=True, nullable=False)
+    start_date = Column(Date, primary_key=True, nullable=False)
+    chapter = Column(CHAR(1))
+    chapter_name = Column(String(16))
+    section_number = Column(Integer)
+    section_name = Column(String(22))
+    subsection_name = Column(String(21))
+    ledger1_account = Column(Integer)
+    ledger1_account_name = Column(String(47))
+    ledger_account_name = Column(String(153))
+    characteristic = Column(CHAR(1))
+    is_resident = Column(Integer)
+    is_reserve = Column(Integer)
+    is_reserved = Column(Integer)
+    is_loan = Column(Integer)
+    is_reserved_assets = Column(Integer)
+    is_overdue = Column(Integer)
+    is_interest = Column(Integer)
+    pair_account = Column(String(5))
+    end_date = Column(Date)
+    is_rub_only = Column(Integer)
+    min_term = Column(CHAR(1))
+    min_term_measure = Column(CHAR(1))
+    max_term = Column(CHAR(1))
+    max_term_measure = Column(CHAR(1))
+    ledger_acc_full_name_translit = Column(CHAR(1))
+    is_revaluation = Column(CHAR(1))
+    is_correct = Column(CHAR(1))
 
 
 class ETLLog(Base):

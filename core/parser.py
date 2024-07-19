@@ -1,5 +1,4 @@
 import pandas as pd
-from sqlalchemy import inspect
 
 from .db_config import SCHEMA
 from .logging_config import logger
@@ -14,7 +13,6 @@ def read_data(file_path, encoding="utf-8", delimiter=";"):
             delimiter=delimiter,
             encoding=encoding,
         )
-        # logger.info("Данные получены.")
         return data
     except Exception as err:
         logger.error(f"Ошибка при чтении данных из: {file_path}; {err}")
@@ -23,23 +21,16 @@ def read_data(file_path, encoding="utf-8", delimiter=";"):
 def clean_data(data):
     data.dropna(how="any", inplace=True)
     data.drop_duplicates(inplace=True)
-    if "CURRENCY_CODE" in data.columns:
-        data["CURRENCY_CODE"] = data["CURRENCY_CODE"].astype(str).str[:3]
+    data.columns = data.columns.str.lower()
+    for col in data.columns:
+        if col == "currency_code":
+            data["currency_code"] = data["currency_code"].astype(str).str[:3]
     return data
 
 
 def load_to_db(data, table_name, engine):
     try:
-        inspector = inspect(engine)
-        # logger.info(f"Загрузка данных в таблицу: {table_name}.")
-        columns_in_db = [
-            column["name"]
-            for column in inspector.get_columns(table_name, schema=SCHEMA)
-        ]
-        # logger.info(f"Колонки в БД: {columns_in_db}")
-        data_columns = [col for col in data.columns if col in columns_in_db]
-        cleaned_data = clean_data(data[data_columns])
-        # logger.info(f"Cleaned data:\n {cleaned_data.dtypes}")
+        cleaned_data = clean_data(data)
 
         cleaned_data.to_sql(
             table_name,
