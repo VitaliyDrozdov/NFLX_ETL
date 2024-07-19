@@ -1,6 +1,6 @@
 import pandas as pd
 
-from .db_config import SCHEMA
+from .db_config import SCHEMA, engine
 from .logging_config import logger
 
 
@@ -40,7 +40,20 @@ def load_to_db(data, table_name, engine):
             index=False,
         )
         # logger.info("Данные загружены.")
+
     except Exception as err:
         logger.error(
             (f"\nОшибка при загрузке данных в таблицу {table_name}: {err}\n")
         )
+
+
+def export_f101_to_csv(csv_path):
+    sql_query = """
+        SELECT * FROM "DM".f101_round_f
+    """
+    try:
+        df = pd.read_sql_query(sql_query, engine)
+        df.to_csv(csv_path, index=False, encoding="utf-8-sig", sep=";")
+        logger.info(f"Данные экспортированы в CSV файл: {csv_path}")
+    except Exception as e:
+        logger.error(f"Ошибка при экспорте данных в CSV: {e}")
