@@ -15,6 +15,7 @@ LANGUAGE plpgsql
 AS $$
 BEGIN
     DELETE FROM "DM".account_turnover_f WHERE on_date = i_OnDate;
+
     INSERT INTO "DM".account_turnover_f (on_date, account_rk, credit_amount, credit_amount_rub, debet_amount, debet_amount_rub)
     SELECT i_OnDate,
             account_rk,
