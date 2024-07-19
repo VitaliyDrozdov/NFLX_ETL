@@ -1,6 +1,4 @@
 
-DROP TABLE IF EXISTS "DM".account_turnover_f;
-
 CREATE TABLE IF NOT EXISTS "DM".account_turnover_f (
     on_date DATE NOT NULL,
     account_rk NUMERIC NOT NULL,
@@ -16,6 +14,7 @@ CREATE OR REPLACE PROCEDURE fill_account_turnover_f (i_OnDate DATE)
 LANGUAGE plpgsql
 AS $$
 BEGIN
+    DELETE FROM "DM".account_turnover_f WHERE on_date = i_OnDate;
     INSERT INTO "DM".account_turnover_f (on_date, account_rk, credit_amount, credit_amount_rub, debet_amount, debet_amount_rub)
     SELECT i_OnDate,
             account_rk,
@@ -84,7 +83,7 @@ DECLARE
 d DATE := '2018-01-01';
 BEGIN
     WHILE d <= '2018-01-31' LOOP
-        CALL "DS".fill_account_turnover_f(d);
+        CALL "DM".fill_account_turnover_f(d);
         d := d + INTERVAL '1 day';
     END LOOP;
 END $$;
