@@ -1,15 +1,4 @@
 
-CREATE TABLE IF NOT EXISTS "DM".account_turnover_f (
-    on_date DATE NOT NULL,
-    account_rk NUMERIC NOT NULL,
-    credit_amount NUMERIC(23, 8),
-    credit_amount_rub NUMERIC(23, 8),
-    debet_amount NUMERIC(23, 8),
-    debet_amount_rub NUMERIC(23, 8)
-);
-
-
-
 CREATE OR REPLACE PROCEDURE fill_account_turnover_f (i_OnDate DATE)
 LANGUAGE plpgsql
 AS $$
@@ -51,40 +40,7 @@ BEGIN
 END;
 $$;
 
-DROP TABLE  IF EXISTS "DM".account_balance_f;
-
-CREATE TABLE  IF NOT EXISTS "DM".account_balance_f (
-    on_date DATE NOT NULL,
-    account_rk NUMERIC NOT NULL,
-    balance_out NUMERIC,
-    balance_out_rub FLOAT
-);
 
 
 
-INSERT INTO "DM".account_balance_f (on_date, account_rk, balance_out, balance_out_rub)
-SELECT
-    '2017-12-31',
-    account_rk,
-    balance_out,
-    balance_out * COALESCE(reduced_cource, 1) AS balance_out_rub
-FROM
-    "DS".ft_balance_f bal
-LEFT JOIN
-    "DS".md_exchange_rate_d ex
-    ON
-    bal.currency_rk = ex.currency_rk
-    AND '2017-12-31' >= ex.data_actual_date
-    AND ('2017-12-31' <= ex.data_actual_end_date OR ex.data_actual_end_date IS NULL);
-
-
-
-ццDO $$
-DECLARE
-d DATE := '2018-01-01';
-BEGIN
-    WHILE d <= '2018-01-31' LOOP
-        CALL "DM".fill_account_turnover_f(d);
-        d := d + INTERVAL '1 day';
-    END LOOP;
-END $$;
+-
