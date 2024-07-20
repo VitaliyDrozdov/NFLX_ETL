@@ -67,8 +67,6 @@ BEGIN
 
 EXCEPTION
     WHEN OTHERS THEN
-        v_end_time := NOW();
-        v_duration := v_end_time - v_start_time;
         RAISE NOTICE 'Произошла ошибка в процедуре fill_account_balance_f: %', SQLERRM;
         RAISE;
 END;

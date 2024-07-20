@@ -49,14 +49,11 @@ BEGIN
     GROUP BY account_rk;
 
     -- Логи:
-    RAISE NOTICE 'Процедура fill_account_turnover_f завершена в %', v_end_time;
     v_end_time := NOW();
+    RAISE NOTICE 'Процедура fill_account_turnover_f завершена в %', v_end_time;
 
     EXCEPTION
     WHEN OTHERS THEN
-        v_end_time := NOW();
-        v_duration := v_end_time - v_start_time;
-
         RAISE NOTICE 'Произошла ошибка в процедуре fill_account_turnover_f: %', SQLERRM;
         RAISE;
 END;
