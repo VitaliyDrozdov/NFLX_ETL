@@ -3,9 +3,12 @@
 ## Описание проекта<a name="description"></a>
 ETL процесс состоит из следующий этапов:
 **1. Загруказ данных из .csv файлов в БД.**
+
 **2. Формирование необходимы витрин данных.**
+
 **3. Формирование таблицы для формы 101.**
-**1. Выгрузка данных из БД в .csv файл.**
+
+**4. Выгрузка данных из БД в .csv файл.**
 
 
 
@@ -23,7 +26,7 @@ ETL процесс состоит из следующий этапов:
    ```bash
    git clone https://github.com/VitaliyDrozdov/NFLX_ETL
 
-2. **Создать и активировать виртуальное окружение:**
+2. **Создаем и активируем виртуальное окружение:**
 
 * Для Linux/macOS
 
@@ -65,7 +68,7 @@ python main.py
 ```
 В результате в БД в схеме "DS" создадутся таблицы аналогичные именам файлов и заполнятся данными из .csv файлов. Логи выполнения будут доступные в таблице "etl_log" в схеме "LOG".
 
-## Расчитываем витрины данных.
+## Расчитываем витрины данных:
 
 В папке data_mart лежат необходимые скрипты sql для создания нужных таблиц и процедур.
 
@@ -85,23 +88,10 @@ do_procedures
 ```
 В схеме "DM" создадутся таблицы  account_turnover_f, account_balance_f, fill_f101_round_f и заполняется рассчитанными данными.
 
-## Выгружаем полученные данные из таблицы f101_round_f.
+## Выгружаем полученные данные из таблицы f101_round_f:
 
 Запускаем скрипт ```f101_manager.py``` в корне проекта:
 ```shell
-python main.py
+python f101_manager.py
 ```
 В папке data_mart (по-умолчанию) появится файл fill_f101_round_f.csv с данными из таблицы.
-
-
-
-<!-- MARKDOWN LINKS & BADGES -->
-
-[Python-url]: https://www.python.org/
-
-[Python-badge]: https://img.shields.io/badge/Python-376f9f?style=for-the-badge&logo=python&logoColor=white
-
-
-[Postgres-url]: https://www.postgresql.org/
-
-[Postgres-badge]: https://img.shields.io/badge/postgres-306189?style=for-the-badge&logo=postgresql&logoColor=white
