@@ -24,7 +24,13 @@ def clean_data(data, dropna):
     data.drop_duplicates(inplace=True)
     data.columns = data.columns.str.lower()
     if "currency_code" in data.columns:
-        data["currency_code"] = data["currency_code"].astype(str).str[:3]
+        data["currency_code"] = (
+            data["currency_code"].astype(int).astype(str).str[:3]
+        )
+    if "code_iso_char" in data.columns:
+        data["code_iso_char"] = data["code_iso_char"].apply(
+            lambda x: "" if len(x) < 2 else x
+        )
     return data
 
 
@@ -40,7 +46,7 @@ def load_to_db(
         cleaned_data.to_sql(
             table_name,
             engine,
-            schema=SCHEMA,
+            schema=schema,
             if_exists="append",
             index=False,
         )

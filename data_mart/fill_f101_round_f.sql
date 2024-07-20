@@ -5,16 +5,22 @@ AS $$
 DECLARE
     v_from_date DATE;
     v_to_date DATE;
+    v_start_time TIMESTAMP;
+    v_end_time TIMESTAMP;
+    v_duration INTERVAL;
 BEGIN
     -- Определяем первый и последний день отчетного периода
     v_from_date := (i_OnDate - INTERVAL '1 month')::date;
     v_to_date := (i_OnDate - INTERVAL '1 day')::date;
 
-    -- Удаляем старые записи за отчетный период, если они уже существуют
+    v_start_time := NOW();
+    RAISE NOTICE 'Процедура fill_f101_round_f начата в %', v_start_time;
+
+    RAISE NOTICE 'Удаление данных для периода % - % из f101_round_f', v_from_date, v_to_date;
     DELETE FROM "DM".f101_round_f
     WHERE from_date = v_from_date AND to_date = v_to_date;
 
-    -- Вставляем данные в таблицу F101 Round
+    RAISE NOTICE 'Вставка данных в f101_round_f для периода % - %', v_from_date, v_to_date;
     INSERT INTO "DM".f101_round_f (
         from_date,
         to_date, chapter,
@@ -97,5 +103,22 @@ BEGIN
     WHERE
         i_OnDate >= a.data_actual_date;
 
+    -- Логи
+    v_end_time := NOW();
+    v_duration := v_end_time - v_start_time;
+
+    RAISE NOTICE 'Процедура fill_f101_round_f завершена в %', v_end_time;
+
+    INSERT INTO "LOG".etl_log (table_name, start_time, end_time, duration)
+    VALUES ('f101_round_f', v_start_time, v_end_time, v_duration);
+
+EXCEPTION
+    WHEN OTHERS THEN
+        v_end_time := NOW();
+        v_duration := v_end_time - v_start_time;
+        RAISE NOTICE 'Произошла ошибка в процедуре fill_f101_round_f: %', SQLERRM;
+        INSERT INTO "LOG".etl_log (table_name, start_time, end_time, duration)
+        VALUES ('f101_round_f', v_start_time, v_end_time, v_duration);
+        RAISE;
 END;
 $$;

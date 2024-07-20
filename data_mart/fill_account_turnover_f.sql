@@ -2,9 +2,19 @@
 CREATE OR REPLACE PROCEDURE fill_account_turnover_f (i_OnDate DATE)
 LANGUAGE plpgsql
 AS $$
+DECLARE
+-- Для логирования:
+    v_start_time TIMESTAMP;
+    v_end_time TIMESTAMP;
+    v_duration INTERVAL;
 BEGIN
+    v_start_time := NOW();
+    RAISE NOTICE 'Процедура fill_account_turnover_f начата в %', v_start_time;
+
+    RAISE NOTICE 'Удаление данных для даты % из account_turnover_f', i_OnDate;
     DELETE FROM "DM".account_turnover_f WHERE on_date = i_OnDate;
 
+    RAISE NOTICE 'Вставка данных в account_turnover_f для даты %', i_OnDate;
     INSERT INTO "DM".account_turnover_f (on_date, account_rk, credit_amount, credit_amount_rub, debet_amount, debet_amount_rub)
     SELECT i_OnDate,
             account_rk,
@@ -37,10 +47,17 @@ BEGIN
     AND i_OnDate >= ex.data_actual_date
     AND (ex.data_actual_end_date IS NULL OR i_OnDate <= ex.data_actual_end_date)
     GROUP BY account_rk;
+
+    -- Логи:
+    RAISE NOTICE 'Процедура fill_account_turnover_f завершена в %', v_end_time;
+    v_end_time := NOW();
+
+    EXCEPTION
+    WHEN OTHERS THEN
+        v_end_time := NOW();
+        v_duration := v_end_time - v_start_time;
+
+        RAISE NOTICE 'Произошла ошибка в процедуре fill_account_turnover_f: %', SQLERRM;
+        RAISE;
 END;
 $$;
-
-
-
-
--

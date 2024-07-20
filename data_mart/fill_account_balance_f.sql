@@ -1,10 +1,18 @@
 CREATE OR REPLACE PROCEDURE "DM".fill_account_balance_f (i_OnDate DATE)
 LANGUAGE plpgsql
 AS $$
+DECLARE
+    v_start_time TIMESTAMP;
+    v_end_time TIMESTAMP;
+    v_duration INTERVAL;
 BEGIN
+    v_start_time := NOW();
+    RAISE NOTICE 'Процедура fill_account_balance_f начата в %', v_start_time;
 
+    RAISE NOTICE 'Удаление данных для даты % из account_balance_f', i_OnDate;
     DELETE FROM "DM".account_balance_f WHERE on_date = i_OnDate;
 
+    RAISE NOTICE 'Вставка данных в account_balance_f для даты %', i_OnDate;
     INSERT INTO "DM".account_balance_f (on_date, account_rk, balance_out, balance_out_rub)
     SELECT
         i_OnDate AS on_date,
@@ -52,5 +60,16 @@ BEGIN
     WHERE
         i_OnDate >= a.data_actual_date
         AND (a.data_actual_end_date IS NULL OR i_OnDate <= a.data_actual_end_date);
+
+
+    v_end_time := NOW();
+    RAISE NOTICE 'Процедура fill_account_balance_f завершена в %', v_end_time;
+
+EXCEPTION
+    WHEN OTHERS THEN
+        v_end_time := NOW();
+        v_duration := v_end_time - v_start_time;
+        RAISE NOTICE 'Произошла ошибка в процедуре fill_account_balance_f: %', SQLERRM;
+        RAISE;
 END;
 $$;
