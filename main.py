@@ -6,7 +6,7 @@ from core.manage_tables import (
     create_tables,
     drop_table_if_exists,
 )
-from core.db_config import engine
+from core.db_config import engine, SCHEMA
 from core.parser import load_to_db, read_data
 from core.runtime import log_execution
 
@@ -26,7 +26,7 @@ def proccess(filename):
     if "md_currency_d.csv" in filename:
         encoding = "cp1252"
     data = read_data(filepath, encoding=encoding)
-    load_to_db(data, table_name, engine, schema="DM")
+    load_to_db(data, table_name, engine, schema=SCHEMA)
 
 
 def main(filenames):

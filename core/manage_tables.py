@@ -13,7 +13,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.ext.declarative import declarative_base
 
-from .db_config import SCHEMA, LOG_SCHEMA
+from .db_config import LOG_SCHEMA, SCHEMA
 from .logging_config import logger
 
 Base = declarative_base()
