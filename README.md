@@ -13,14 +13,14 @@ ETL процесс состоит из следующий этапов:
 
 
 
-### Используемый стек<a name="stack"></a>
+### Используемый стек:<a name="stack"></a>
 
 - Python
 - Pandas
 - SQLAlchemy
 - PostgreSQL
 
-### Установка проекта локально в контейнерах Docker <a name="local-install"></a>
+### Установка проекта локально <a name="local-install"></a>
 
 1. **Склонировать репозиторий:**
 
