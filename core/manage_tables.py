@@ -118,6 +118,10 @@ class ETLLog(Base):
 
 
 def create_tables(engine):
+    """Создание таблиц в БД.
+    Args:
+        engine: соединение с БД.
+    """
     try:
         logger.info("Создание таблиц.")
         Base.metadata.create_all(engine, checkfirst=True)
@@ -129,6 +133,13 @@ def create_tables(engine):
 
 
 def drop_table_if_exists(engine, table_name, schema=SCHEMA):
+    """Удаление таблиц, если существуют.
+
+    Args:
+        engine: соединение с БД.
+        table_name (str): наименование таблицы.
+        schema (str, optional): Наименование схемы. Defaults to SCHEMA.
+    """
     try:
         metadata.reflect(bind=engine, schema=schema)
         logger.info(f"Удаление существующей таблицы: {table_name}")

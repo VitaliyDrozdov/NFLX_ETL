@@ -5,6 +5,12 @@ from .logging_config import logger
 
 
 def read_data(file_path, encoding="utf-8", delimiter=";"):
+    """Функция загруки данных из csv.
+    Args:
+        file_path: dataset.
+        encoding (str, optional): Кодировка. Defaults to "utf-8".
+        delimeter (str, optional): Разделитель.Defaults to ";".
+    """
     try:
         logger.info(f"Чтение данных из файла: {file_path}")
         data = pd.read_csv(
@@ -19,6 +25,11 @@ def read_data(file_path, encoding="utf-8", delimiter=";"):
 
 
 def clean_data(data, dropna):
+    """Функция для очистки данных.
+    Args:
+        data: dataset.
+        dropna (bool): Удалять ли строки с Null значениями.
+    """
     if dropna:
         data.dropna(how="any", inplace=True)
     data.drop_duplicates(inplace=True)
@@ -37,6 +48,16 @@ def clean_data(data, dropna):
 def load_to_db(
     data, table_name, engine, schema=SCHEMA, clean=True, dropna=True
 ):
+    """Загрузка данных в БД.
+
+    Args:
+        data: dataset для загрузки.
+        table_name (str): наименование таблицы.
+        engine: соединение с БД. Например, через SQLAlchemy.
+        schema (str, optional): Наименование схемы в БД. Defaults to SCHEMA.
+        clean (bool, optional): Очистка данных. Defaults to True.
+        dropna (bool, optional): Удалять ли строки с Null значениями.
+    """
     try:
         if clean:
             cleaned_data = clean_data(data, dropna=dropna)

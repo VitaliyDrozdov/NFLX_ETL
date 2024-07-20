@@ -29,6 +29,13 @@ logger = setup_logging()
 
 
 def log_to_db(table_name, start_time, end_time):
+    """Функция записи логов в таблицу в БД
+
+    Args:
+        table_name (str): наименоване таблицы.
+        start_time (datetime): начальное время выполнения.
+        end_time (datetime): конечное время выполнения.
+    """
     try:
         from .manage_tables import ETLLog
 

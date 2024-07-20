@@ -5,6 +5,8 @@ from .logging_config import logger, log_to_db
 
 
 def log_execution(func):
+    """Декортатор для логирования в консоли и в log файл."""
+
     @wraps(func)
     def wrapper(filename):
         table_name = filename.split(".")[0]
